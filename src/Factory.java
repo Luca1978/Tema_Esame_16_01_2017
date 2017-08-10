@@ -32,19 +32,21 @@ public class Factory
 			e.printStackTrace();
 		}
 
-		// se uno dei due ingredienti non ha una quantit‡ sufficiente per preparare
+		// se uno dei due ingredienti non ha una quantit√† sufficiente per preparare
 		// il prodotto quindi richiedo al fattorino di riempire le scorte di ingredienti
 		if ((currentA < nA) || (currentB < nB))
 		{ 
 			System.out.println("Prodotto mancante. Richiesta fornitura al fattorino da operaio id=" + id_operaio);
 
-			// Sblocco il thread del fattorino che cosÏ riempir‡ le quantit‡ di ingredienti
+			// Sblocco il thread del fattorino che cos√¨ riempir√† le quantit√† di ingredienti
 			needProd.release();
 
 			try
 			{
 				// faccio in modo che il thread del fattorino si possa svegliare
 				Thread.sleep(1);
+				// Attendo che il fattorino abbia finito di rifornire gli ingredienti
+				needProd.acquire();
 			}
 			catch (InterruptedException e)
 			{
@@ -56,7 +58,7 @@ public class Factory
 		currentA -= nA;
 		currentB -= nB;
 
-		System.out.println("L'operaio ID=" + id_operaio + " ha prelevato le quantit‡ per preparare un prodotto: A=" + currentA + " B=" + currentB );
+		System.out.println("L'operaio ID=" + id_operaio + " ha prelevato le quantit√† per preparare un prodotto: A=" + currentA + " B=" + currentB );
 
 		mutex.release();
 	}
@@ -65,7 +67,7 @@ public class Factory
 	{
 		try
 		{
-			// Questo thread Ë sempre in pending su questo semaforo aspettando che qualcuno 
+			// Questo thread √® sempre in pending su questo semaforo aspettando che qualcuno 
 			// (un operaio) lo sblocchi per permettergli di rifornire gli ingredienti 
 			needProd.acquire();
 		}
@@ -78,6 +80,18 @@ public class Factory
 		currentA = totA;
 		currentB = totB;
 		
-		System.out.println("Il fattorino ha rifornito le quantit‡ di prodotti.");
+		System.out.println("Il fattorino ha rifornito le quantit√† di prodotti.");
+		
+		needProd.release();
+		try
+		{
+			// Rilascio la CPU agli altri thread
+			Thread.sleep(1);
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }
+
