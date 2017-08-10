@@ -15,13 +15,13 @@ public class Operaio extends Thread
 		while (true)
 		{
 			factory.prepara_prodotto(this.id);
+
 			try
 			{
 				sleep(500);
 			}
 			catch (InterruptedException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
