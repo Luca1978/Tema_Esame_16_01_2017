@@ -12,6 +12,16 @@ public class Fattorino extends Thread
 		while (true)
 		{
 			factory.scorta_ingredienti();
+			
+			try
+			{
+				sleep(500);
+			}
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+
 		}
 	}
 }
